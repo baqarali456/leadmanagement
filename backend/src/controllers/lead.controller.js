@@ -4,10 +4,31 @@ import { isValidObjectId } from "mongoose"
 
 const getUserLead = asyncHandler(async (req, res) => {
     try {
-        const { name, phoneNumber, email, source = "Other", status = "New" } = req.body;
+        const {
+            name,
+            phoneNumber,
+            email,
+            source = "Other",
+            status = "New",
+            AlternateEmail,
+            assignedTo,
+            city,
+            jobInterest,
+            qualification,
+            passoutYear,
+        } = req.body;
 
-        if (!name || !phoneNumber || !email) {
-            return res.status(401).json({
+        if ([name,
+            phoneNumber,
+            email,
+            source,
+            AlternateEmail,
+            assignedTo,
+            city,
+            jobInterest,
+            qualification,
+            passoutYear].some(field => field?.trim() === "")) {
+            return res.status(404).json({
                 message: "fields are required"
             })
         }
@@ -16,6 +37,12 @@ const getUserLead = asyncHandler(async (req, res) => {
             {
                 name,
                 phoneNumber,
+                AlternateEmail,
+                assignedTo,
+                city,
+                jobInterest,
+                qualification,
+                passoutYear,
                 email,
                 source,
                 status
@@ -49,7 +76,7 @@ const deleteLead = asyncHandler(async (req, res) => {
         const { leadId } = req.params;
 
         if (!isValidObjectId(leadId)) {
-            return res.status(401)
+            return res.status(404)
                 .json(
                     {
                         message: "leadId is  not valid"
@@ -95,10 +122,10 @@ const updateLead = asyncHandler(async (req, res) => {
     try {
         const { leadId } = req.params;
 
-        const {status} = req.body;
+        const { status } = req.body;
 
-        if(!status){
-            return res.status(401)
+        if (!status) {
+            return res.status(404)
                 .json(
                     {
                         message: "status is required"
@@ -117,29 +144,29 @@ const updateLead = asyncHandler(async (req, res) => {
 
         const lead = await Lead.findById(leadId);
 
-        if(!lead){
-           return res
-           .status(404)
-           .json(
-            {
-                message:"lead doesn't exist"
-            }
-           )
+        if (!lead) {
+            return res
+                .status(404)
+                .json(
+                    {
+                        message: "lead doesn't exist"
+                    }
+                )
         }
 
         const updatedLead = await Lead.findByIdAndUpdate(
             leadId,
             {
-                $set:{
-                  status
+                $set: {
+                    status
                 }
             },
             {
-                new:true
+                new: true
             }
         )
 
-    
+
 
         return res
             .status(200)
@@ -163,21 +190,21 @@ const updateLead = asyncHandler(async (req, res) => {
 })
 
 
-const getAllLeads = asyncHandler(async(req,res)=>{
+const getAllLeads = asyncHandler(async (req, res) => {
     try {
         const allLeads = await Lead.aggregate([
             {
-                $match:{},
+                $match: {},
             }
         ])
 
 
         return res
-        .status(200)
-        .json({
-            message:"get all leads successfully",
-            allLeads,
-        })
+            .status(200)
+            .json({
+                message: "get all leads successfully",
+                allLeads,
+            })
 
 
     } catch (error) {
