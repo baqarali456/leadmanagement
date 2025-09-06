@@ -19,7 +19,8 @@ const getUserLead = asyncHandler(async (req, res) => {
         } = req.body;
 
         if (
-            [name,
+            [
+                name,
                 phoneNumber,
                 email,
                 source,
