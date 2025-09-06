@@ -59,17 +59,29 @@ const leadSchema = new mongoose.Schema({
         required: true,
     },
     assignedTo: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+    },
+    city: {
         type: String,
         required: true,
     },
-    city: {
+    state:{
         type: String,
         required: true,
     },
     passoutYear: {
         type: Number,
         required: true,
-    }
+    },
+    HeardFrom:{
+        type:String,
+        required:true,
+    },
+    createdBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+    },
 
 }, { timestamps: true })
 

@@ -18,16 +18,21 @@ const getUserLead = asyncHandler(async (req, res) => {
             passoutYear,
         } = req.body;
 
-        if ([name,
-            phoneNumber,
-            email,
-            source,
-            AlternateEmail,
-            assignedTo,
-            city,
-            jobInterest,
-            qualification,
-            passoutYear].some(field => field?.trim() === "")) {
+        if (
+            [name,
+                phoneNumber,
+                email,
+                source,
+                AlternateEmail,
+                assignedTo,
+                city,
+                jobInterest,
+                qualification,
+                HeardFrom,
+                state,
+                passoutYear
+            ].some(field => field?.trim() === "")
+        ) {
             return res.status(404).json({
                 message: "fields are required"
             })
@@ -45,7 +50,10 @@ const getUserLead = asyncHandler(async (req, res) => {
                 passoutYear,
                 email,
                 source,
-                status
+                status,
+                HeardFrom,
+                state,
+                createdBy: req.user._id,
             }
         )
 
